@@ -1,6 +1,6 @@
 # Workout Data Analysis — Volume & Consistency
 
-Analysis of 28 logged workout sessions (2026-01-31 to 2026-06-29) from a self-hosted
+Analysis of 33 logged workout sessions (2026-01-31 to 2026-07-31) from a self-hosted
 n8n + Google Sheets workout tracking agent. Data extracted directly from the
 `workout_exercise` fact table. Two analyses, chosen deliberately over a larger
 planned set to ship something complete rather than partial: **(1) training volume
@@ -18,21 +18,22 @@ silently dropped (see `analysis.py` for exact logic):
   type for aggregation purposes.
 - 3 AMRAP sets excluded from numeric volume totals (no fixed rep count exists to sum).
 
-An earlier version of this dataset had six sessions sharing one date and one
-row misdated to 2024 — both were development artifacts from testing the
-GENERATE/MODIFY flow, corrected at the source in Google Sheets before this
-analysis was run. Noted here for transparency, not because it still affects
-the numbers below.
+Two earlier versions of this dataset had, respectively, six sessions sharing
+one date plus one row misdated to 2024, and later two July sessions sharing
+one date — all development artifacts from testing the GENERATE/MODIFY flow,
+corrected at the source in Google Sheets before this analysis was run. Noted
+here for transparency, not because they still affect the numbers below: all
+33 sessions now have distinct dates.
 
 ## Findings
 
 Monthly volume (rounds x reps) grew steadily from January through March
-(259 -> 1,674 -> 2,911), then settled into a lower, more stable range of
-roughly 850–1,250 from April onward with 3–4 sessions per month — a plausible
-build-up-then-maintain pattern rather than a straight climb.
+(259 -> 1,674 -> 2,911), settled into a lower, more stable range of roughly
+850–1,250 from April through June, then picked back up in July (1,521) with
+5 sessions — the highest monthly session count since March.
 
-Consistency: median gap between sessions is **4 days**, mean 5.5 days across
-28 sessions over 149 days — noticeably more frequent than once a week. There
+Consistency: median gap between sessions is **4 days**, mean 5.7 days across
+33 sessions over 181 days — noticeably more frequent than once a week. There
 are two gaps over two weeks (max 22 days), so the pattern has real
 interruptions rather than being a metronomic routine. Session complexity
 (exercises per session) stayed in the 9–11 range throughout, so structure was
