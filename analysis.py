@@ -144,16 +144,17 @@ gap_summary = {
 # ---------------------------------------------------------------------------
 plt.style.use("seaborn-v0_8-whitegrid")
 
-# Chart 1: sessions per month + reps volume per month
+# Chart 1: sessions per month + average exercises per session per month
 fig, ax1 = plt.subplots(figsize=(10, 5))
 ax1.bar(monthly["session_date"], monthly["sessions"], width=15, color="#4C72B0", alpha=0.7, label="Sessions")
 ax1.set_ylabel("Sessions per month", color="#4C72B0")
 ax1.set_xlabel("Month")
 ax2 = ax1.twinx()
-ax2.plot(monthly["session_date"], monthly["reps_volume"], color="#DD8452", marker="o", label="Reps volume (rounds x reps)")
-ax2.set_ylabel("Total reps volume", color="#DD8452")
+ax2.plot(monthly["session_date"], monthly["avg_exercises_per_session"], color="#8172B2", marker="o",
+         label="Avg exercises per session")
+ax2.set_ylabel("Avg exercises per session", color="#8172B2")
 ax1.xaxis.set_major_formatter(mdates.DateFormatter("%b %Y"))
-fig.suptitle("Training frequency and reps volume by month")
+fig.suptitle("Training frequency and session complexity, by month")
 fig.tight_layout()
 fig.savefig("chart_1_volume_by_month.png", dpi=150)
 plt.close(fig)
@@ -186,7 +187,8 @@ fig.tight_layout()
 fig.savefig("chart_3_consistency_gaps.png", dpi=150)
 plt.close(fig)
 
-# Chart 4: exercises per session trend (proxy for session length/complexity)
+# Chart 4: exercises per session trend (per-session granularity, complements the
+# monthly average in chart 1)
 fig, ax = plt.subplots(figsize=(10, 5))
 ax.plot(session_agg["session_date"], session_agg["num_exercises"], marker="o", color="#8172B2")
 ax.set_title("Exercises logged per session, over time")
