@@ -1,0 +1,98 @@
+exercise_id,exercise_name,exercise_body_part_focus,exercise_movement_pattern,exercise_intensity_type,exercise_frequency
+1,High-to-Low Woodchopper,Core,Rotation,Endurance,5
+2,Plank Jack to Sit Back,Core,Push/Squat (Stability),Endurance,4
+3,Goblet Complex,Full Body,Squat/Push/Pull,Endurance,2
+4,Alternating Renegade Row,Full Body,Pull/Push (Stability),Strength,5
+5,Plate Snatch to Lunge,Full Body,Pull/Squat (Explosive),Power,9
+6,Plate Overhead Alternating Squat Tap,Full Body,Squat/Push (Stability),Strength,3
+7,Rebound Box Jump,Lower Body,Squat (Explosive),Power,2
+8,Forward Bound & Run Back,Lower Body,Squat (Explosive),Power,4
+9,Monster Walk,Lower Body,Squat (Stability),Endurance,3
+10,Tempo Squat,Lower Body,Squat,Strength,1
+11,Romanian Deadlift,Lower Body,Hinge,Strength,2
+12,Lateral Banded KB Front Rack Squat Walk,Lower Body,Squat,Strength,1
+13,Resistance Band Sprint,Lower Body,Squat (Explosive),Power,5
+14,Tempo Front Squat,Lower Body,Squat,Strength,1
+15,Squat Jump,Lower Body,Squat,Power,3
+16,Stability Ball Tuck,Core,Push (Stability),Endurance,6
+17,Standing Chainsaw Row,Upper Body,Pull,Strength,4
+18,Close Grip Lat Pull Down,Upper Body,Pull,Strength,2
+19,Step Up to OH Press & Knee Drive,Full Body,Push / Squat,Strength,4
+20,Gatekeeper Ball Slam,Full Body,Rotation / Push,Power,1
+21,explosive leg press,Lower Body,Push,Power,1
+22,1.5 rep leg press,Lower Body,Push,Hypertrophy,3
+23,tempo hip thrust,Lower Body,Hinge,Strength,5
+24,single arm double kb swing,Full Body,Hinge,Power,5
+25,stiff leg deadlift with extension,Lower Body,Hinge,Strength,1
+26,step up squat,Lower Body,Squat / Step,Strength,5
+27,weighted box step up transfer,Lower Body,Step,Power,5
+28,calf raises on leg press,Lower Body,Push,Strength,7
+29,Alternating Reverse Lunge,lower body,squat,strength,4
+30,Half Kneeling Ball Slam,core/upper body,rotation/push,power,5
+31,Single Arm Rotational Row,core/upper body,rotation/pull,strength,5
+32,Assisted Transfer Push Up,upper body/core,push,strength,2
+33,Explosive Squat,lower body,squat,power,4
+34,Seated Pull-Up,upper body,pull,strength,7
+35,Half Kneeling Alternating Kettlebell Press,core/upper body,push,strength,7
+36,Pendulum Clean,full body,pull/squat,power,6
+37,Double Dumbbell Complex,full body,push/pull/squat/hinge,strength,4
+38,Side Plank Clamshell Cable Row,core/upper body,rotation/pull,strength,1
+39,Pallof Press to Overhead Lift,core/upper body,push/rotation,strength,4
+40,Inchworm,full body/core,hinge/push,endurance,3
+41,Snow Angel Raise,upper body,pull,endurance,2
+42,Rear Delt Pull on Incline Bench,upper body,pull,strength,2
+43,High Knees Sprint,full body/lower body/core,push,power/endurance,5
+44,Squat Thrust,full body,squat/hinge/push,endurance/power,4
+45,Box Jump,lower body,squat/power,power,6
+46,Box Step Up Transfer,lower body/core,push/squat,strength,5
+47,Kick Sit,core/lower body,rotation/push,endurance,1
+48,Dip,upper body,push,strength,5
+49,Chest Press,upper body,push,strength,4
+50,Alternating Chest Press,upper body,push,strength,3
+51,Top Down Gorilla Row,full body/upper body/core,pull/hinge,strength,4
+52,Bosu Ball Cross Body Knee Drive,core/lower body,rotation/push,endurance,7
+53,Inverted Row,upper body/core,pull,strength,4
+54,Single Arm Push Press with OH Hold,full body/upper body/core,push,power/strength,2
+55,Lunge Stance Woodchopper,core/lower body,rotation,strength,4
+56,Forward Kick Sit,core/lower body,push,endurance,5
+57,Drunken Mountain Climber,core/full body,rotation/push,endurance,3
+58,Squat to Thrust,full body,squat/push,power/endurance,2
+59,Plate Overhead 1.5 Rep Squat,full body/lower body/upper body,squat/push,strength/hypertrophy,6
+60,Single Arm Dumbbell Row on Bench,upper body/core,pull,strength,6
+61,Double Dumbbell Clean,full body,hinge/pull,power,6
+62,Chameleon Sit Back with Alternating Knee Tap,core,rotation,endurance,2
+63,Side Plank Reach Through,core/upper body,rotation,endurance,4
+64,Stability Ball Deadbug,core,push,endurance,4
+65,Hip Thrust,lower body/core,hinge,strength/hypertrophy,20
+66,Suitcase Dumbbell Box Step Up,lower body/core,squat/push,strength/hypertrophy,4
+67,Crunch,core,rotation,endurance,2
+68,Lunging Landmine Switch,lower body/core,rotation/squat,endurance,4
+69,Plate Halo Snatch,full body/core,rotation/pull,power,1
+70,Squat Chest Throw,full body,squat/push,power,6
+71,Squat Thrust to High Knee,full body,hinge/squat,endurance,4
+72,Alternating Kneel to Knee Drive,lower body/core,hinge/squat,endurance,3
+73,Alternating Jumping Lunge,lower body,squat,power,9
+74,Bear Sit Back with Knee Drive,core/lower body,rotation/hinge,endurance,2
+75,Squat Press,full body,squat/push,strength,4
+76,Incline Press,upper body,push,hypertrophy,16
+77,Kayak Lat Pulldown,upper body/core,pull/rotation,strength,5
+78,Narrow Stance Dumbbell Power Clean,full body,pull/push/hinge,power,6
+79,High to Low Woodchopper,core/upper body,rotation,strength,3
+80,Tall Kneeling Supinating Dumbbell Curl to Arnold Press,upper body/full body,push/pull,strength,8
+81,Squat,lower body/core,squat,strength,11
+82,Side to Side Single Arm Kettlebell Swing,full body/core,hinge/pull,power,4
+83,Resistance Band Seated Hip Abduction,lower body,pull,endurance,2
+84,Kettlebell Contralateral Squat,lower body/core,squat,strength,2
+85,Dumbbell Pendulum Clean,full body,hinge/pull,power,6
+86,Single Leg Deadlift,lower body/core,hinge,strength,6
+87,Lateral Step Over,lower body/core,squat,endurance,2
+88,Push Up,upper body/core,push,strength,2
+89,Pull Up,upper body/core,pull,strength,1
+90,Kettlebell Halo,core/upper body,rotation,endurance,1
+91,Front Squat,lower body,squat,strength,6
+92,Prisoner Squat to Heel Tap,lower body/core,squat,endurance,7
+93,Single Arm Deadlift,lower body/core,hinge,strength,3
+94,Lateral Lunge,lower body,squat,strength,3
+95,Alternating Single Arm Double Kettlebell Swing,full body/core,hinge,power,4
+96,Skaters,full body,power,power,5
+97,Front Rack Walking Lunges to Knee Drive,full body,squat,power,7

@@ -140,6 +140,133 @@ gap_summary = {
 }
 
 # ---------------------------------------------------------------------------
+# ANALYSIS 5 — NEW VS REPEATED EXERCISE RATIO
+# ---------------------------------------------------------------------------
+# Sort chronologically (by session date, then workout_id as tiebreaker for
+# same-date sessions) so "first occurrence" reflects true chronological order.
+df_sorted = df_clean.sort_values(["session_date", "workout_id"]).reset_index(drop=True)
+df_sorted["occurrence_rank"] = df_sorted.groupby("exercise_id").cumcount()
+df_sorted["is_new_exercise"] = df_sorted["occurrence_rank"] == 0
+
+new_vs_repeat_monthly = df_sorted.set_index("session_date").resample("MS").agg(
+    new_exercises=("is_new_exercise", "sum"),
+    total_exercises=("is_new_exercise", "count"),
+).reset_index()
+new_vs_repeat_monthly["repeated_exercises"] = (
+    new_vs_repeat_monthly["total_exercises"] - new_vs_repeat_monthly["new_exercises"]
+)
+new_vs_repeat_monthly["new_ratio"] = (
+    new_vs_repeat_monthly["new_exercises"] / new_vs_repeat_monthly["total_exercises"]
+).round(3)
+
+total_unique_exercises = df_sorted["exercise_id"].nunique()
+total_exercise_instances = len(df_sorted)
+new_vs_repeat_summary = {
+    "unique_exercises_ever_logged": total_unique_exercises,
+    "total_exercise_instances": total_exercise_instances,
+    "overall_new_ratio": round(df_sorted["is_new_exercise"].sum() / total_exercise_instances, 3),
+}
+
+# ---------------------------------------------------------------------------
+# ANALYSIS 3 — PROGRESSIVE OVERLOAD EFFECTIVENESS
+# ---------------------------------------------------------------------------
+# Scope: reps-type sets only. Time-based amounts are stored as free text
+# ("30 sec", "1 min") with inconsistent units, and AMRAP has no fixed count -
+# neither is a reliable basis for a "did it increase" comparison. This
+# narrows the analysis but keeps every number in it honest.
+reps_df = df_sorted[df_sorted["workout_repetition_type"] == "reps"].copy()
+reps_df["workout_repetition_amount"] = pd.to_numeric(
+    reps_df["workout_repetition_amount"], errors="coerce"
+)
+reps_df = reps_df.dropna(subset=["workout_repetition_amount"])
+
+overload_rows = []
+for ex_id, grp in reps_df.groupby("exercise_id"):
+    grp = grp.sort_values(["session_date", "workout_id"])
+    if len(grp) < 3:
+        continue  # need at least 3 logged instances to call it a trend
+    first_amt = grp["workout_repetition_amount"].iloc[0]
+    last_amt = grp["workout_repetition_amount"].iloc[-1]
+    first_rounds = grp["workout_rounds"].iloc[0]
+    last_rounds = grp["workout_rounds"].iloc[-1]
+    delta_amt = last_amt - first_amt
+    delta_rounds = last_rounds - first_rounds
+    if delta_amt > 0 or (delta_amt == 0 and delta_rounds > 0):
+        trend = "increased"
+    elif delta_amt < 0 or (delta_amt == 0 and delta_rounds < 0):
+        trend = "decreased"
+    else:
+        trend = "unchanged"
+    overload_rows.append({
+        "exercise_id": ex_id,
+        "exercise_name": grp["workout_exercise_name"].iloc[-1],
+        "times_logged": len(grp),
+        "first_amount": first_amt,
+        "last_amount": last_amt,
+        "first_rounds": first_rounds,
+        "last_rounds": last_rounds,
+        "trend": trend,
+    })
+
+overload_df = pd.DataFrame(overload_rows).sort_values("times_logged", ascending=False)
+overload_trend_counts = overload_df["trend"].value_counts().to_dict() if len(overload_df) else {}
+
+# ---------------------------------------------------------------------------
+# ANALYSIS 2 — MOVEMENT PATTERN BALANCE
+# ---------------------------------------------------------------------------
+catalog = pd.read_csv("data/exercise_list.csv")
+
+# The catalog's movement_pattern field is often compound ("push/squat",
+# "rotation/pull"). Use the first listed pattern as the "primary" pattern for
+# a single-count breakdown -- documented simplification, not silently assumed.
+def primary_pattern(val):
+    if pd.isna(val):
+        return None
+    first = str(val).lower().split("/")[0].strip()
+    # Strip parenthetical qualifiers like "(Stability)" or "(Explosive)"
+    first = first.split("(")[0].strip()
+    return first
+
+catalog["primary_movement_pattern"] = catalog["exercise_movement_pattern"].apply(primary_pattern)
+
+# Known standard patterns per the workout generator's own rotation logic
+# (see code_workout_generator patternOrder in the n8n workflow).
+standard_patterns = {"squat", "hinge", "push", "pull", "rotation", "carry"}
+catalog["pattern_is_standard"] = catalog["primary_movement_pattern"].isin(standard_patterns)
+nonstandard = catalog[~catalog["pattern_is_standard"]]
+if len(nonstandard):
+    quality_notes.append(
+        f"{len(nonstandard)} catalog exercise(s) have a non-standard primary movement "
+        f"pattern value not in the generator's own rotation set {sorted(standard_patterns)}: "
+        + ", ".join(f"{r.exercise_name} ('{r.primary_movement_pattern}')" for r in nonstandard.itertuples())
+        + ". Excluded from the movement-pattern chart rather than guessed."
+    )
+
+pattern_map = catalog.set_index(catalog["exercise_id"].astype(str))["primary_movement_pattern"].to_dict()
+df_sorted["primary_movement_pattern"] = df_sorted["exercise_id"].astype(str).map(pattern_map)
+
+unmatched = df_sorted["primary_movement_pattern"].isna().sum()
+if unmatched:
+    quality_notes.append(
+        f"{unmatched} logged exercise instance(s) could not be matched to a catalog "
+        f"movement pattern (exercise_id not found in catalog) -- excluded from the chart."
+    )
+
+pattern_counts = (
+    df_sorted[df_sorted["primary_movement_pattern"].isin(standard_patterns)]
+    ["primary_movement_pattern"].value_counts()
+)
+pattern_pct = (pattern_counts / pattern_counts.sum() * 100).round(1)
+
+carry_present_in_catalog = "carry" in catalog["primary_movement_pattern"].values
+if not carry_present_in_catalog:
+    quality_notes.append(
+        "The generator's movement-pattern rotation order includes 'carry', but zero "
+        "exercises in the catalog are tagged with a 'carry' movement pattern -- the "
+        "rotation logic can never actually place a carry exercise."
+    )
+
+# ---------------------------------------------------------------------------
 # CHARTS
 # ---------------------------------------------------------------------------
 plt.style.use("seaborn-v0_8-whitegrid")
@@ -200,11 +327,60 @@ fig.tight_layout()
 fig.savefig("chart_4_exercises_per_session.png", dpi=150)
 plt.close(fig)
 
+# Chart 5: new vs repeated exercises per month (stacked bar)
+fig, ax = plt.subplots(figsize=(10, 5))
+ax.bar(new_vs_repeat_monthly["session_date"], new_vs_repeat_monthly["repeated_exercises"],
+       width=15, color="#4C72B0", alpha=0.8, label="Repeated exercise")
+ax.bar(new_vs_repeat_monthly["session_date"], new_vs_repeat_monthly["new_exercises"],
+       width=15, bottom=new_vs_repeat_monthly["repeated_exercises"], color="#DD8452", alpha=0.9,
+       label="New exercise (first time logged)")
+ax.set_title("New vs repeated exercises, by month")
+ax.set_xlabel("Month")
+ax.set_ylabel("Exercise instances")
+ax.xaxis.set_major_formatter(mdates.DateFormatter("%b %Y"))
+ax.legend()
+fig.tight_layout()
+fig.savefig("chart_5_new_vs_repeated.png", dpi=150)
+plt.close(fig)
+
+# Chart 6: progressive overload — trend outcome for exercises logged 3+ times (reps-type only)
+fig, ax = plt.subplots(figsize=(8, 5))
+if overload_trend_counts:
+    order = ["increased", "unchanged", "decreased"]
+    colors = {"increased": "#55A868", "unchanged": "#8C8C8C", "decreased": "#C44E52"}
+    vals = [overload_trend_counts.get(k, 0) for k in order]
+    ax.bar(order, vals, color=[colors[k] for k in order])
+    for i, v in enumerate(vals):
+        ax.text(i, v + 0.1, str(v), ha="center")
+ax.set_title(f"Reps trend, first vs last logged (exercises logged 3+ times, reps-type only, n={len(overload_df)})")
+ax.set_ylabel("Number of exercises")
+fig.tight_layout()
+fig.savefig("chart_6_progressive_overload.png", dpi=150)
+plt.close(fig)
+
+# Chart 7: movement pattern balance — actual distribution of logged exercise instances
+fig, ax = plt.subplots(figsize=(9, 5))
+order = ["squat", "hinge", "push", "pull", "rotation", "carry"]
+vals = [pattern_counts.get(p, 0) for p in order]
+pcts = [pattern_pct.get(p, 0) for p in order]
+bar_colors = ["#4C72B0" if v > 0 else "#DDDDDD" for v in vals]
+ax.bar(order, vals, color=bar_colors)
+for i, (v, p) in enumerate(zip(vals, pcts)):
+    label = f"{v}\n({p}%)" if v > 0 else "0\n(not in\ncatalog)"
+    ax.text(i, v + max(vals) * 0.02, label, ha="center", fontsize=9)
+ax.set_title("Movement pattern balance: logged exercise instances by primary pattern")
+ax.set_ylabel("Exercise instances")
+fig.tight_layout()
+fig.savefig("chart_7_movement_pattern_balance.png", dpi=150)
+plt.close(fig)
+
 # ---------------------------------------------------------------------------
 # OUTPUT
 # ---------------------------------------------------------------------------
 session_agg.to_csv("session_level_summary.csv", index=False)
 monthly.to_csv("monthly_summary.csv", index=False)
+new_vs_repeat_monthly.to_csv("new_vs_repeated_monthly.csv", index=False)
+overload_df.to_csv("progressive_overload_by_exercise.csv", index=False)
 
 print("=== DATA QUALITY NOTES ===")
 for n in quality_notes:
@@ -220,5 +396,26 @@ print("\n=== CONSISTENCY / GAP SUMMARY ===")
 for k, v in gap_summary.items():
     print(f"{k}: {v}")
 
+print("\n=== NEW VS REPEATED SUMMARY ===")
+for k, v in new_vs_repeat_summary.items():
+    print(f"{k}: {v}")
+print(new_vs_repeat_monthly.to_string(index=False))
+
+print("\n=== PROGRESSIVE OVERLOAD SUMMARY (reps-type, logged 3+ times) ===")
+print(f"Exercises meeting threshold: {len(overload_df)}")
+print(f"Trend counts: {overload_trend_counts}")
+print(overload_df.to_string(index=False))
+
+print("\n=== MOVEMENT PATTERN BALANCE ===")
+print(pattern_counts.to_string())
+print("\nPercent of logged instances:")
+print(pattern_pct.to_string())
+
+pattern_counts.to_frame("instances").join(pattern_pct.to_frame("pct")).to_csv(
+    "movement_pattern_balance.csv"
+)
+
 print("\nCharts written: chart_1_volume_by_month.png, chart_2_rounds_per_session.png, "
-      "chart_3_consistency_gaps.png, chart_4_exercises_per_session.png")
+      "chart_3_consistency_gaps.png, chart_4_exercises_per_session.png, "
+      "chart_5_new_vs_repeated.png, chart_6_progressive_overload.png, "
+      "chart_7_movement_pattern_balance.png")
