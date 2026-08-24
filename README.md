@@ -11,6 +11,8 @@ overload effectiveness** — the full original plan, all shipped.
 Note: August 2026 is a partial month (data through the 20th) — its 4 sessions
 are not directly comparable to a full month's count in chart 1.
 
+Companion repo: the n8n agent that generates this data → [workout-tracker](https://github.com/nlavrincikova/workout-tracker)
+
 ## Data quality notes
 
 Issues found and handled explicitly rather than silently dropped (see
