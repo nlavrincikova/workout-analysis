@@ -12,6 +12,8 @@ Note: September 2026 is a partial month (data through the 5th) — its 1 session
 is not directly comparable to a full month's count in chart 1. Full run history
 and what changed between refreshes: `INSIGHTS_LOG.md`.
 
+Companion repo: the n8n agent that generates this data → [workout-tracker](https://github.com/nlavrincikova/workout-tracker)
+
 ## Data quality notes
 
 Issues found and handled explicitly rather than silently dropped (see
