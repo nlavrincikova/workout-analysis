@@ -111,7 +111,7 @@ worth watching on the next refresh.
 | File | Contents |
 |---|---|
 | `data/workout_exercise.csv` | Raw fact table export (authoritative, full) |
-| `data/exercise_list.csv` | Exercise catalog dimension table, all 97 exercise IDs |
+| `data/exercise_list.csv` | Exercise catalog dimension table, all 99 exercise IDs |
 | `analysis.py` | Full pipeline: load -> data quality pass -> volume parsing -> aggregation -> charts |
 | `session_level_summary.csv` | One row per session: rounds, reps volume, time volume, exercise count |
 | `monthly_summary.csv` | Monthly rollup |
