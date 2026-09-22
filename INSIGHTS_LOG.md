@@ -48,6 +48,64 @@ case similar same-day duplicates recur during future agent testing.
 
 ---
 
+## 2026-09-22 — v3: dataset refresh, two pipeline bugs found and fixed
+
+**Dataset scope:** 41 sessions, 2026-01-31 to 2026-09-05. 99 exercises in the
+catalog (up from 97 in v2). Up from v2's 37 sessions / 2026-08-20 cutoff.
+
+**What changed since v2:** Pulled the current `workout_exercise` and
+`exercise_list` tabs directly from Sheets (not the Drive connector — it
+reproduced the same silent truncation the v2 entry already flagged, this time
+cutting off at `workout_id` 28; abandoned in favor of a manual export).
+Two real pipeline bugs surfaced against the fresh export, neither present in
+the v2 run, both fixed in `analysis.py`:
+- `exercise_list.csv` isn't valid UTF-8 — an AI-generated exercise description
+  contains a Windows curly-apostrophe (`0x92`), which the default `pd.read_csv`
+  call can't decode. Fixed by reading it with `encoding="cp1252"`.
+- The fresh `workout_exercise.csv` export carries ~4,580 trailing all-blank
+  rows below the real data (from calculated columns spanning a fixed sheet
+  range). Left in place, the stray `NaN`s silently upcast `exercise_id` to
+  `float64`, which broke the movement-pattern join against the catalog's
+  `int64` IDs — every row went unmatched and the chart came back empty, with
+  no error. Fixed by dropping rows with a blank `workout_id` and casting
+  `workout_id`/`exercise_id` back to `int` immediately after load. Worth
+  watching on every future export, not just this one.
+Also restored the `data/` subfolder for the two source CSVs — it had been
+flattened to the repo root at some point, out of sync with both this repo's
+own `README.md` and `analysis.py`, which both expected `data/`.
+
+**Key findings:**
+- Both v2 headline findings hold up on 4 more sessions and 3 more weeks, not
+  just a smaller sample: progressive overload is still flat (75.5% unchanged,
+  40 of 53 qualifying exercises, up from 74%/37-of-50), and the squat/rotation
+  skew is essentially unchanged (squat 29.3% vs rotation 12.4%, versus
+  29.1%/13.4% in v2). `carry` is still absent from the catalog.
+- **All 8 new sessions since v2 are full body** (`workout_type_id` 1) — no
+  lower body, upper body, or core session in three weeks. September's
+  new-exercise ratio is 0% (0 of 15 logged instances), down from August's
+  already-low 2.7%.
+- **Catalog `exercise_frequency` can drift from actual logged history.**
+  Plank (`exercise_id` 98) shows `exercise_frequency` 3 in the catalog but
+  only 2 real rows in `workout_exercise`. Off by one; cause not investigated.
+- **`needs_new_exercise` can leave a phantom catalog entry.** Kettlebell Swing
+  (`exercise_id` 99) is in the catalog with `exercise_frequency` 1 but has
+  zero rows in `workout_exercise` — it has never actually been logged. Reads
+  as a MODIFY `add` that created the catalog row and was then never confirmed
+  into a session; the catalog write and the log write aren't atomic. Same
+  class of risk as the already-tracked `staged_workout` cleanup gap, but on
+  the catalog itself, and not yet tracked anywhere. Found by spot-checking
+  the two exercises added since v2, not by an automated check — worth adding
+  a "frequency vs. actual row count" pass to `analysis.py`'s data quality
+  section in a future run if this keeps happening, but not built this round.
+
+**Open question for next run:** the Plank frequency drift and the Kettlebell
+Swing phantom entry were both found by hand-checking the two newest catalog
+rows. As the catalog grows, that stops being a viable per-run check — decide
+whether a frequency-vs-actual-count reconciliation belongs in `analysis.py`'s
+automated quality pass before the next refresh.
+
+---
+
 ## Template for future entries
 
 ```

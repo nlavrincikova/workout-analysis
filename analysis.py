@@ -15,6 +15,13 @@ pd.set_option("display.max_rows", 200)
 # LOAD
 # ---------------------------------------------------------------------------
 df = pd.read_csv("data/workout_exercise.csv")
+# Sheets exports can carry thousands of trailing all-blank rows below the real
+# data (from calculated columns spanning a fixed range) -- drop them here so
+# exercise_id/workout_id don't get upcast to float64 by stray NaNs, which
+# silently breaks string-based joins (e.g. the movement-pattern merge below).
+df = df.dropna(subset=["workout_id"])
+df["workout_id"] = df["workout_id"].astype(int)
+df["exercise_id"] = df["exercise_id"].astype(int)
 df["workout_date"] = pd.to_datetime(df["workout_date"])
 
 # ---------------------------------------------------------------------------
@@ -214,7 +221,7 @@ overload_trend_counts = overload_df["trend"].value_counts().to_dict() if len(ove
 # ---------------------------------------------------------------------------
 # ANALYSIS 2 — MOVEMENT PATTERN BALANCE
 # ---------------------------------------------------------------------------
-catalog = pd.read_csv("data/exercise_list.csv")
+catalog = pd.read_csv("data/exercise_list.csv", encoding="cp1252")
 
 # The catalog's movement_pattern field is often compound ("push/squat",
 # "rotation/pull"). Use the first listed pattern as the "primary" pattern for

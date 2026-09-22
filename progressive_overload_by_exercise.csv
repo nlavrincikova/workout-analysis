@@ -1,0 +1,54 @@
+exercise_id,exercise_name,times_logged,first_amount,last_amount,first_rounds,last_rounds,trend
+65,Hip Thrust,9,12,12,3.0,3.0,unchanged
+35,Half Kneeling Alternating Kettlebell Press,8,16,12,3.0,3.0,decreased
+16,Stability Ball Tuck,8,10,10,3.0,3.0,unchanged
+97,Front Rack Walking Lunges to Knee Drive,8,14,15,3.0,4.0,increased
+5,Plate Snatch to Lunge,8,12,12,3.0,3.0,unchanged
+80,Tall Kneeling Supinating Dumbbell Curl to Arnold Press,8,14,14,4.0,4.0,unchanged
+81,Squat,8,12,12,4.0,4.0,unchanged
+61,Double Dumbbell Clean,7,15,12,3.0,3.0,decreased
+78,Narrow Stance Dumbbell Power Clean,7,12,12,3.0,3.0,unchanged
+27,weighted box step up transfer,7,16,16,4.0,4.0,unchanged
+34,Seated Pull-Up,7,10,10,3.0,3.0,unchanged
+28,calf raises on leg press,6,20,20,3.0,3.0,unchanged
+23,tempo hip thrust,6,8,12,3.0,4.0,increased
+86,Single Leg Deadlift,6,12,12,4.0,4.0,unchanged
+60,Single Arm Dumbbell Row on Bench,6,12,14,6.0,6.0,increased
+24,single arm double kb swing,6,15,15,3.0,3.0,unchanged
+95,Alternating Single Arm Double Kettlebell Swing,6,12,14,3.0,3.0,increased
+15,Squat Jump,5,10,10,3.0,3.0,unchanged
+13,Resistance Band Sprint,5,10,10,3.0,3.0,unchanged
+4,Alternating Renegade Row,5,12,14,3.0,3.0,increased
+1,High-to-Low Woodchopper,5,16,10,4.0,4.0,decreased
+92,Prisoner Squat to Heel Tap,5,8,8,4.0,4.0,unchanged
+91,Front Squat,5,12,12,4.0,4.0,unchanged
+76,Incline Press,5,12,11,4.0,2.0,decreased
+48,Dip,5,8,8,3.0,3.0,unchanged
+59,Plate Overhead 1.5 Rep Squat,5,10,10,3.0,3.0,unchanged
+30,Half Kneeling Ball Slam,5,10,11,4.0,4.0,increased
+37,Double Dumbbell Complex,5,6,6,3.0,3.0,unchanged
+36,Pendulum Clean,5,12,12,3.0,3.0,unchanged
+31,Single Arm Rotational Row,5,12,12,6.0,4.0,decreased
+85,Dumbbell Pendulum Clean,5,14,16,3.0,3.0,increased
+66,Suitcase Dumbbell Box Step Up,5,14,14,3.0,3.0,unchanged
+51,Top Down Gorilla Row,5,16,16,3.0,3.0,unchanged
+50,Alternating Chest Press,5,10,10,3.0,3.0,unchanged
+49,Chest Press,5,5,5,3.0,3.0,unchanged
+17,Standing Chainsaw Row,4,10,10,3.0,3.0,unchanged
+39,Pallof Press to Overhead Lift,4,10,10,4.0,4.0,unchanged
+96,Skaters,4,14,10,3.0,3.0,decreased
+82,Side to Side Single Arm Kettlebell Swing,4,16,16,3.0,3.0,unchanged
+19,Step Up to OH Press & Knee Drive,4,10,10,3.0,3.0,unchanged
+64,Stability Ball Deadbug,4,10,10,3.0,3.0,unchanged
+41,Snow Angel Raise,4,15,15,3.0,3.0,unchanged
+53,Inverted Row,4,10,10,3.0,3.0,unchanged
+55,Lunge Stance Woodchopper,4,10,10,4.0,4.0,unchanged
+68,Lunging Landmine Switch,4,12,12,3.0,3.0,unchanged
+77,Kayak Lat Pulldown,4,14,14,3.0,3.0,unchanged
+29,Alternating Reverse Lunge,3,14,14,3.0,3.0,unchanged
+40,Inchworm,3,8,8,3.0,3.0,unchanged
+58,Squat to Thrust,3,10,10,3.0,3.0,unchanged
+69,Plate Halo Snatch,3,12,12,3.0,3.0,unchanged
+83,Resistance Band Seated Hip Abduction,3,15,15,2.0,2.0,unchanged
+93,Single Arm Deadlift,3,12,12,4.0,4.0,unchanged
+94,Lateral Lunge,3,10,10,4.0,4.0,unchanged

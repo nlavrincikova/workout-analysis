@@ -1,15 +1,16 @@
 # Workout Data Analysis — Volume, Consistency, Variety, Overload & Movement Balance
 
-Analysis of 37 logged workout sessions (2026-01-31 to 2026-08-20) from a self-hosted
+Analysis of 41 logged workout sessions (2026-01-31 to 2026-09-05) from a self-hosted
 n8n + Google Sheets workout tracking agent. Data extracted directly from the
-`workout_exercise` fact table, joined against the `exercise_list` catalog (97
+`workout_exercise` fact table, joined against the `exercise_list` catalog (99
 exercises) for the movement-pattern analysis. Five analyses: **(1) training
 frequency & session complexity**, **(2) movement pattern balance**, **(3) session
 consistency / gaps**, **(4) new vs repeated exercise ratio**, and **(5) progressive
-overload effectiveness** — the full original plan, all shipped.
+overload effectiveness**.
 
-Note: August 2026 is a partial month (data through the 20th) — its 4 sessions
-are not directly comparable to a full month's count in chart 1.
+Note: September 2026 is a partial month (data through the 5th) — its 1 session
+is not directly comparable to a full month's count in chart 1. Full run history
+and what changed between refreshes: `INSIGHTS_LOG.md`.
 
 ## Data quality notes
 
@@ -29,13 +30,26 @@ Issues found and handled explicitly rather than silently dropped (see
   from the movement-pattern chart rather than force-mapped to a guessed pattern.
 - **`carry` is unreachable in the generator.** `code_workout_generator`'s
   movement-pattern rotation explicitly includes `carry`, but zero exercises in
-  the 97-exercise catalog are tagged with that pattern — that branch of the
+  the 99-exercise catalog are tagged with that pattern — that branch of the
   rotation logic can never actually place an exercise.
+- **Catalog `exercise_frequency` can drift from, or exist without, actual
+  logged history.** One exercise (Plank) shows a catalog frequency one higher
+  than its real row count in `workout_exercise`; another (Kettlebell Swing)
+  is in the catalog with `exercise_frequency` 1 but has never been logged at
+  all — consistent with the MODIFY `add` flow writing the catalog row before
+  the workout is ever confirmed. Found by spot-checking the two exercises
+  added to the catalog since the last refresh, not by an automated check.
+  See `INSIGHTS_LOG.md` (2026-09-22 entry) for detail.
+- **Google Sheets exports can carry thousands of trailing blank rows** below
+  the real data (from calculated columns spanning a fixed range). Silently
+  upcasts integer ID columns to float, which broke the movement-pattern join
+  in a prior run of this pipeline with no error message. `analysis.py` now
+  drops blank rows and re-casts IDs to `int` immediately after loading.
 
 An earlier version of this dataset had development artifacts (sessions sharing
 one date, one misdated row) from testing the GENERATE/MODIFY flow, corrected
-at the source in Google Sheets before this analysis was run. All 37 sessions
-now have distinct dates.
+at the source in Google Sheets before this analysis was run. All sessions
+have distinct dates.
 
 ## Findings
 
@@ -49,37 +63,46 @@ a meaningful share of what's logged here, and reads as a load metric while
 only covering part of the load. It's still available per-session in
 `session_level_summary.csv` with that caveat in mind.)
 
-**Consistency:** median gap between sessions is **4 days**, mean 5.6 days
-across 37 sessions over 201 days — noticeably more frequent than once a week.
+**Consistency:** median gap between sessions is **4 days**, mean 5.4 days
+across 41 sessions over 217 days — noticeably more frequent than once a week.
 Two gaps exceed two weeks (max 22 days), so the pattern has real
-interruptions rather than being a metronomic routine.
+interruptions rather than being a metronomic routine. Unchanged from the
+first pass of this analysis, on 4 more sessions and 3 more weeks of data.
 
 **Exercise variety front-loaded, then flattened.** 91% of exercises logged in
 February were new to the catalog; by April that had dropped under 10%, and it
-stays there (1–7%) through August. Of 97 unique exercises ever logged, only
-26% of all logged instances were a first-time exercise overall. Early months
+stays there (0–7%) through September. Of 98 unique exercises ever logged, only
+23.7% of all logged instances were a first-time exercise overall. Early months
 were catalog-building; recent months draw almost entirely on exercises
-already known to the system.
+already known to the system — September logged zero new exercises (0 of 15
+instances).
 
-**Progressive overload isn't visibly happening.** Of 50 exercises logged 3+
-times, **37 (74%) showed no change** in reps or rounds between their first
+**Progressive overload isn't visibly happening.** Of 53 exercises logged 3+
+times, **40 (75.5%) showed no change** in reps or rounds between their first
 and last logged instance — only 7 increased, 6 decreased. The workout
 generator's `volume_logic` defaults to `"same"` and progressive mode has to
 be explicitly requested; this data is consistent with "same" being what
-happens in practice almost regardless of intent. Scope: reps-type sets only
-(3+ logged instances) — time-based amounts use inconsistent free-text units
-("30 sec", "1 min") and AMRAP has no fixed count, so neither is a reliable
-basis for a first-vs-last comparison.
+happens in practice almost regardless of intent, and the finding is stable
+across two refreshes (74%/37-of-50 in the first pass). Scope: reps-type sets
+only (3+ logged instances) — time-based amounts use inconsistent free-text
+units ("30 sec", "1 min") and AMRAP has no fixed count, so neither is a
+reliable basis for a first-vs-last comparison.
 
 **Movement pattern balance skews squat-heavy, and `carry` is structurally
-absent.** Of 358 logged exercise instances with a valid catalog match, squat
-patterns account for 29.1% versus rotation's 13.4% — more than double.
-More notable: the generator's own selection logic rotates through
+absent.** Of 403 logged exercise instances with a valid catalog match, squat
+patterns account for 29.3% versus rotation's 12.4% — more than double, and
+essentially unchanged from the first pass (29.1% vs 13.4%). More notable: the
+generator's own selection logic rotates through
 `['squat', 'hinge', 'push', 'pull', 'rotation', 'carry']`, but no exercise in
-the 97-exercise catalog is tagged `carry` — meaning that part of the rotation
+the 99-exercise catalog is tagged `carry` — meaning that part of the rotation
 logic has been dead code since the catalog was built. This is a system design
 finding as much as a training-pattern one: the intended balancing mechanism
 can't do what it's designed to do for one full pattern category.
+
+**All 8 sessions logged since the first pass of this analysis are full body**
+(`workout_type_id` 1) — no lower body, upper body, or core session across
+three weeks (2026-08-05 to 09-05). One month's window, not a trend claim, but
+worth watching on the next refresh.
 
 ## Files
 
