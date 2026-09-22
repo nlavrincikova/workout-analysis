@@ -8,6 +8,9 @@ frequency & session complexity**, **(2) movement pattern balance**, **(3) sessio
 consistency / gaps**, **(4) new vs repeated exercise ratio**, and **(5) progressive
 overload effectiveness**.
 
+**Write-up:** [`CASE_STUDY.md`](./CASE_STUDY.md) — what auditing this system's own data found wrong with the
+system itself, not just the training data.
+
 Note: September 2026 is a partial month (data through the 5th) — its 1 session
 is not directly comparable to a full month's count in chart 1. Full run history
 and what changed between refreshes: `INSIGHTS_LOG.md`.
