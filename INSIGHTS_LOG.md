@@ -86,17 +86,15 @@ own `README.md` and `analysis.py`, which both expected `data/`.
   already-low 2.7%.
 - **Catalog `exercise_frequency` can drift from actual logged history.**
   Plank (`exercise_id` 98) shows `exercise_frequency` 3 in the catalog but
-  only 2 real rows in `workout_exercise`. Off by one; cause not investigated.
-- **`needs_new_exercise` can leave a phantom catalog entry.** Kettlebell Swing
-  (`exercise_id` 99) is in the catalog with `exercise_frequency` 1 but has
-  zero rows in `workout_exercise` — it has never actually been logged. Reads
-  as a MODIFY `add` that created the catalog row and was then never confirmed
-  into a session; the catalog write and the log write aren't atomic. Same
-  class of risk as the already-tracked `staged_workout` cleanup gap, but on
-  the catalog itself, and not yet tracked anywhere. Found by spot-checking
-  the two exercises added since v2, not by an automated check — worth adding
-  a "frequency vs. actual row count" pass to `analysis.py`'s data quality
-  section in a future run if this keeps happening, but not built this round.
+  only 2 real rows in `workout_exercise`; Kettlebell Swing (`exercise_id` 99)
+  shows `exercise_frequency` 1 with zero rows in `workout_exercise` — never
+  actually logged. Cause: writing and deleting test data directly in the live
+  sheet, without reconciling `exercise_frequency` back down afterward — not a
+  `needs_new_exercise` design flaw, correcting the initial read of this
+  finding. Found by spot-checking the two exercises added since v2, not by an
+  automated check — worth adding a "frequency vs. actual row count"
+  reconciliation pass to `analysis.py`'s data quality section in a future run
+  if this keeps happening, but not built this round.
 
 **Open question for next run:** the Plank frequency drift and the Kettlebell
 Swing phantom entry were both found by hand-checking the two newest catalog

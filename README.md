@@ -41,10 +41,11 @@ Issues found and handled explicitly rather than silently dropped (see
   logged history.** One exercise (Plank) shows a catalog frequency one higher
   than its real row count in `workout_exercise`; another (Kettlebell Swing)
   is in the catalog with `exercise_frequency` 1 but has never been logged at
-  all — consistent with the MODIFY `add` flow writing the catalog row before
-  the workout is ever confirmed. Found by spot-checking the two exercises
-  added to the catalog since the last refresh, not by an automated check.
-  See `INSIGHTS_LOG.md` (2026-09-22 entry) for detail.
+  all. Cause: test data written and deleted directly in the live sheet
+  without reconciling `exercise_frequency` back down afterward. Found by
+  spot-checking the two exercises added to the catalog since the last
+  refresh, not by an automated check. See `INSIGHTS_LOG.md` (2026-09-22
+  entry) for detail.
 - **Google Sheets exports can carry thousands of trailing blank rows** below
   the real data (from calculated columns spanning a fixed range). Silently
   upcasts integer ID columns to float, which broke the movement-pattern join
