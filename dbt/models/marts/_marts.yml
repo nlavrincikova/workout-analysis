@@ -1,0 +1,33 @@
+version: 2
+
+models:
+  - name: mart_movement_pattern_balance
+    description: Share of exercise slots per movement pattern per month. Compound exercises split one slot across their patterns.
+    data_tests:
+      - dbt_utils_free_unique_combination:
+          arguments:
+            columns: [month, movement_pattern]
+    columns:
+      - name: month
+        data_tests: [not_null]
+      - name: movement_pattern
+        data_tests: [not_null]
+
+  - name: mart_progressive_overload
+    description: Exercises done in 2+ rep-counted sessions, first vs. last session volume (rounds x reps). Weight is not logged.
+    columns:
+      - name: exercise_id
+        data_tests: [unique, not_null]
+      - name: verdict
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['progressing', 'flat', 'regressing']
+
+  - name: mart_exercise_novelty
+    description: New vs. repeated exercises per workout, with the running count of distinct exercises.
+    columns:
+      - name: workout_id
+        data_tests: [unique, not_null]
+      - name: pct_new
+        description: Share of the workout's exercises never done before.

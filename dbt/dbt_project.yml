@@ -1,0 +1,14 @@
+name: workout_analysis
+version: "2.0.0"
+profile: workout_analysis
+
+model-paths: ["models"]
+test-paths: ["tests"]
+clean-targets: ["target", "dbt_packages"]
+
+models:
+  workout_analysis:
+    staging:
+      +materialized: view
+    marts:
+      +materialized: table

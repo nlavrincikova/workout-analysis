@@ -1,0 +1,14 @@
+# Reads the same environment variables as loader/load_raw.py.
+# No password is stored here: set PGPASSWORD in your shell (locally) or in CI.
+workout_analysis:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: "{{ env_var('PGHOST', 'localhost') }}"
+      port: "{{ env_var('PGPORT', '5433') | as_number }}"
+      user: "{{ env_var('PGUSER', 'postgres') }}"
+      password: "{{ env_var('PGPASSWORD', '') }}"
+      dbname: "{{ env_var('PGDATABASE', 'workout') }}"
+      schema: analytics
+      threads: 4

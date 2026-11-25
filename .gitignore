@@ -1,0 +1,14 @@
+# Real exports of your workout sheet stay local
+data/raw/*.csv
+
+# dbt build output
+dbt/target/
+dbt/logs/
+dbt/dbt_packages/
+logs/
+
+# Python
+__pycache__/
+.pytest_cache/
+.venv/
+dbt/.user.yml

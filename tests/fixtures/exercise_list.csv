@@ -1,0 +1,10 @@
+exercise_id,exercise_name,exercise_body_part_focus,exercise_primary_equipment,exercise_movement_pattern,exercise_intensity_type,exercise_description,exercise_muscles_worked,exercise_key_cues_safety,exercise_non_machine_alternative,exercise_name_normalized,exercise_frequency
+1,High-to-Low Woodchopper,Core,Machine (Cable),Rotation,Endurance,Diagonal rotational pull from high to low.,"Primary: Obliques, Core.",Hips stable.,Resistance Band Woodchoppers,high-to-low woodchopper,3
+2,Plank Jack to Sit Back,Core,Bodyweight,Push/Squat (Stability),Endurance,High plank with leg jacks.,"Primary: Core, Hip Flexors.",Keep hips low.,Mountain Climbers,plank jack to sit back,2
+3,Goblet Complex,Full Body,Kettlebell/Dumbbell,Squat/Push/Pull,Endurance,"Squat, press, lunge in goblet position.","Primary: Quadriceps, Glutes, Core.",Deep core brace.,Bodyweight Squat to Overhead Reach,goblet complex,2
+4,Alternating Renegade Row,Full Body,Dumbbell,Pull/Push (Stability),Strength,Plank with alternating rows.,"Primary: Upper/Mid Back, Biceps, Core.",Keep hips level.,Plank with Shoulder Taps,alternating renegade row,3
+10,Tempo Squat,Lower Body,Barbell/Dumbbell,Squat,Strength,Slow controlled squat.,"Quads, Glutes, Adductors, Core.",3-4s descent.,Bodyweight Tempo Squats,tempo squat,2
+11,Romanian Deadlift,Lower Body,Barbell/Dumbbell,Hinge,Strength,Hip hinge to mid-shin.,"Hamstrings, Glute Max, Lower Back.",Spine neutral.,Kettlebell Swings,romanian deadlift,3
+21,Explosive Leg Press,Lower Body,Machine,Push (Explosive),Power,Fast concentric leg press.,"Quads, Glutes.",Control the descent.,Jump Squats,explosive leg press,1
+22,1.5 Rep Leg Press,Lower Body,Machine,Push,Hypertrophy,Leg press with half rep.,"Quads, Glutes.",Full range.,1.5 Rep Squat,1.5 rep leg press,1
+,,,,,,,,,,,

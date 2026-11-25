@@ -1,0 +1,55 @@
+version: 2
+
+sources:
+  - name: raw
+    description: Tabs of the fitness_exercise_catalog Google Sheet, loaded as text by loader/load_raw.py.
+    schema: raw
+    tables:
+      - name: exercise_list
+      - name: workout_type
+      - name: workout_exercise
+
+models:
+  - name: stg_exercise_list
+    description: Exercise catalog, typed. Grain = one exercise.
+    columns:
+      - name: exercise_id
+        data_tests: [unique, not_null]
+      - name: movement_patterns
+        description: Compound pattern without modifier, e.g. "squat/push/pull".
+        data_tests: [not_null]
+
+  - name: stg_workout_type
+    description: Workout types, typed. Scratch columns from the sheet are excluded by the loader.
+    columns:
+      - name: workout_type_id
+        data_tests: [unique, not_null]
+
+  - name: stg_workout_exercise
+    description: Logged exercises. Grain = one row of the workout_exercise tab.
+    columns:
+      - name: source_row
+        description: Row number in the Google Sheet, for tracing a record back to its cell.
+        data_tests: [unique, not_null]
+      - name: workout_id
+        data_tests: [not_null]
+      - name: workout_date
+        data_tests: [not_null]
+      - name: exercise_id
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_exercise_list')
+                field: exercise_id
+      - name: workout_type_id
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_workout_type')
+                field: workout_type_id
+      - name: repetition_type
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['reps', 'time', 'amrap']
