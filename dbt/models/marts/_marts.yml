@@ -14,10 +14,20 @@ models:
         data_tests: [not_null]
 
   - name: mart_progressive_overload
-    description: Exercises done in 2+ rep-counted sessions, first vs. last session volume (rounds x reps). Weight is not logged.
+    description: Exercises done in 2+ sessions, first vs. last session volume - rounds x reps for rep-counted exercises, rounds x seconds for time-based ones. Weight is not logged.
+    data_tests:
+      - dbt_utils_free_unique_combination:
+          arguments:
+            columns: [exercise_id, measure]
     columns:
       - name: exercise_id
-        data_tests: [unique, not_null]
+        data_tests: [not_null]
+      - name: measure
+        data_tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['reps', 'seconds']
       - name: verdict
         data_tests:
           - accepted_values:
